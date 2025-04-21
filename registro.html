@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registro Montessori</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; background-color: #f8f9fa; }
+    #reader { width: 300px; margin: auto; }
+    h2 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <h2>Escanea tu Código QR</h2>
+  <div id="reader"></div>
+  <p id="result" style="margin-top: 20px;"></p>
+
+  <script>
+    function onScanSuccess(qrMessage) {
+      document.getElementById('result').innerText = `Código detectado: ${qrMessage}`;
+
+      fetch("https://script.google.com/macros/s/AKfycbybs_eX1inZxSTD_8nUAdEjM9NjpSluM7cxG5W9tfzGiYA6UNS7fj40HdIEDvKrlRg/exec?codigo=" + encodeURIComponent(qrMessage))
+        .then(response => response.text())
+        .then(data => alert("✅ " + data))
+        .catch(err => alert("❌ Error: " + err));
+    }
+
+    function onScanError(error) {
+      console.warn("Error: ", error);
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess,
+      onScanError
+    );
+  </script>
+</body>
+</html>
